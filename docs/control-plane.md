@@ -40,8 +40,8 @@ The Spec section of the resource definition encapsulates the desired state of th
 | name | string   | A name for this graph node |
 | dependencies | List<string> | A list of DAG names that this node depends on |
 | implementation | [ImplementationSpec](#ImplementationSpec) | The implementation for this node |
-| fork | [ForkSpec](#ForkSpec) | Optional spec for forking traffic to forward nodes. Default is to send all traffic to all children nodes |
-| join | [JoinSpec](#JoinSpec) | Optional spec for joining traffic from dependencies. Default is to pass traffic as it arrives.
+| route | [RouteSpec](#RouteSpec) | Optional spec for routing traffic to forward nodes. Default is to send all traffic to all children nodes |
+| merge | [MergeSpec](#MergeSpec) | Optional spec for merging traffic from dependencies. Default is to pass traffic as it arrives.
 
 ### ImplementationSpec
 
@@ -52,7 +52,7 @@ The Spec section of the resource definition encapsulates the desired state of th
 | svc | v1.Service | The name of a kubernetes service |
 
 
-### ForkSpec
+### RouteSpec
 Must be zero or 1 field. If no fields then the default is to send traffic to all children nodes.
 
 | Field       | Value       | Description |
@@ -76,7 +76,7 @@ Must be zero or 1 field. If no fields then the default is to send traffic to all
 | traffic  | Map<String,Int> | Optional Map of node name to % of traffic to send to it |
 
 
-### JoinSpec
+### MergeSpec
 Must contain zero or one field. If no fields then the default is to pass all traffic thru as it appears.
 
 | Field       | Value       | Description |
@@ -85,11 +85,11 @@ Must contain zero or one field. If no fields then the default is to pass all tra
 | implementation | [ImplementationSpec](#ImplementationSpec) | Call custom function |
 
 ### EnsembleSpec
-If no fields specified then join requests and average
+If no fields specified then merge requests and average
 
 | Field       | Value       | Description |
 | ----------- | ----------- | ----------- |
-| weights  | Map<String,Float> |  Weight to apply to each traffic from each dependencies when joining |
+| weights  | Map<String,Float> |  Weight to apply to each traffic from each dependencies when merging |
 
 
 ## Execution
@@ -98,9 +98,9 @@ If no fields specified then join requests and average
 * Nodes which have no nodes that depend on them will be treated as output nodes
 
 For each node:
-  1. Apply join if specified or pass traffic as received
+  1. Apply merge if specified or pass traffic as received
   1. Run implementation if specified
-  1. Apply fork if specified or pass traffic to all children
+  1. Apply route if specified or pass traffic to all children
 
 ## Examples
 
@@ -117,7 +117,7 @@ metadata:
 spec:
   dag:
     - name: a
-      fork:
+      route:
         split:
     - name: b
       dependencies: [a]
@@ -143,7 +143,7 @@ metadata:
 spec:
   dag:
     - name: a
-      fork:
+      route:
         mab:
           egreedy: 0.1
     - name: b
@@ -180,6 +180,6 @@ spec:
         kfservice: kfc
     - name: d
       dependencies: [a, b, c]
-      join:
+      merge:
         ensemble:
 ```
