@@ -14,8 +14,10 @@ A user should provide a server that:
 
 # Merge
 
-There seem to be two options. A higher level interface where the list of payloads is provided or a low level one where each individual payload is received as available. For the later it is up to the function to decide when and if it does the merge operation.
+A user should provide a server that:
 
- 1. Function receives an aggregated list of payloads to merge
- 1. Function receives each individual payload as it arrives with a header that indicates an estimation of how many more payloads are expected.
+ * Receives requests and eventually returns an aggregated request.
+ * Upon receving the request if the merge should not be carried out then an empty reply should be returned.
+ * Each request will contain a header `mlgraph/pending-requests` which will provide an upper bound on the number of requests that may still arrive for this transaction. It is an upper bound as other requests in this transaction may not have passed through all routing elements in the graph so it is uncertain if all routes to this node will actually be taken.
+
 
