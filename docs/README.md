@@ -7,11 +7,12 @@ specification for defining:
   * Multi-Armed Bandits
   * Model Ensembles
   
- ## Control Plane Definition
+## Definitions
  
- The control plane is defined [here](control-plane.md)
- 
- ## Implementations
+  * [Control plane](control-plane.md)
+  * [Data plane](data-plane.md)
+
+## Implementations
  
  There may be several implementations:
  
