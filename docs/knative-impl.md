@@ -18,7 +18,10 @@ We need to be able to allow algorithmic control over requests passing through th
  
  
 ## Merge
- 
+
+The main challenge with a merge is to join N child requests together into a single onward request. The core challenge for that seems to be to know when all N child events have arrived so the new aggregate event can be sent.
+
+![knative-merge](./knative-merge.png)
  
  
  

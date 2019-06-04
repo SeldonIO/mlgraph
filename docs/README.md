@@ -16,4 +16,5 @@ specification for defining:
  There may be several implementations:
  
    * A synchronous implemtation provided by a graph orchestrator
+       * A [seldon implementation](seldon-impl.md)
    * A [KNative implementation](knative-impl.md) for asynchronous cases 
