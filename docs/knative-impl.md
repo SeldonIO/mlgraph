@@ -6,23 +6,32 @@ There are two core operations that need to be applied:
 
   * Route: Route request to 1 or more subsequent nodes in the graph
   * Merge: Merge a set of responses from dependent nodes in the graph
-  
+
+Messages will be passed through the graph and be split and merged as defined by the specification.
+
 ## Route
 
-We need to be able to allow algorithmic control over requests passing through the graph. The route operation will allow each request to be specified which 1 or more child nodes the request proceeds to. 
+We need to be able to allow algorithmic control over requests passing through the graph. The route operation will allow each request to be specified which of 0 or more child nodes the request proceeds to.
 
- This could be accomplished via a Channel with custom Subscription that applies meta data to the CloudEvent 
- for each request that allows a subsequent Broker with Filters for each path to be used.
- 
+A KNative implementation is shown below:
+
 ![knative-route](./knative-route.png)
- 
+
+A Channel with a Subscription that applies meta data to the CloudEvent for each request that allows a subsequent Broker with Filters for each path to be used to direct requests. Headers would need to be added to the CloudEvent that will be matched by the Filters for each possible path to forward the request.
+
  
 ## Merge
-
-The main challenge with a merge is to join N child requests together into a single onward request. The core challenge for that seems to be to know when all N child events have arrived so the new aggregate event can be sent.
+ 
+We need a component that will allow events that have passed through the previous graph nodes to be joined together for one external request. When a request is managed by the graph it will be given a unique ID. The role of the merge component will be to join together events that have the same ID into a single event. A rough design is shown below:
 
 ![knative-merge](./knative-merge.png)
- 
+
+The challenge is for any such component to know when all events for a single request have reached it so that it can do its merge processing and emit a final event.
+
+
+## Questions
+
+ * Does KNative have the resilience to handle retries for lost messages?
  
  
  
