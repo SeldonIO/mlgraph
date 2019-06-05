@@ -2,6 +2,30 @@
 
 ML Graph adds two specific operations: Route and Merge. Users can provide custom implementations for these.
 
+# Path Spec and Payloads
+
+There will need to be path to make prediction and in future calls such as Feedback needed for reinforcement learning.
+
+## API Path Specs
+
+For [Tensorflow Http](https://www.tensorflow.org/tfx/serving/api_rest) the `predict` API is of the form:
+
+```
+POST http://host:port/v1/models/${MODEL_NAME}[/versions/${MODEL_VERSION}]:predict
+```
+
+For Seldon the predict API is of the form:
+
+```
+/api/v0.1/predictions
+```
+
+For a graph the need to specify a particular model does not make sense as a graph may contain many models therefore a path spec more like that of Seldon would seem to make sense.
+
+## Payloads
+
+Payloads could be either Tensorflow or Seldon as long as all nodes in the graph conform to this.
+
 # Route
 
 A user should provide a server that:
