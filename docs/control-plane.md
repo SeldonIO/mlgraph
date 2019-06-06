@@ -62,6 +62,10 @@ Only one field must be defined.
 | kfservice | string   | The name of a kubeflow kf service |
 | svc | string | The FQDN name of a kubernetes service |
 
+Notes:
+
+  * Do we need to specify `modelName` for kfservice?
+
 ### CustomSpec
 
 | Field       | Value       | Description |

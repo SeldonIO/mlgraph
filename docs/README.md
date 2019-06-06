@@ -3,8 +3,8 @@
 MLGraph defines a graph of machine learning components. The goal is to provide a simple machine learning focused 
 specification for defining:
 
-  * A/B Tests
-  * Multi-Armed Bandits
+  * A/B Tests and multi-model experimentation
+  * Advanced optimization with Multi-Armed Bandits
   * Model Ensembles
   
 ## Definitions
