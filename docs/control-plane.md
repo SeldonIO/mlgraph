@@ -156,7 +156,7 @@ spec:
         kfservice: kfd
 ```
 
-### E-Greedy Multi_Armed Bandit over 2 KFServices
+### E-Greedy Multi_Armed Bandit over 3 KFServices
 
 ```YAML
 apiVersion: serving.mlspec.org/v1alpha2

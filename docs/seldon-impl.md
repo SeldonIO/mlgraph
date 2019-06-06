@@ -1,8 +1,11 @@
 # Seldon Implementation
 
-The MLGraph spec will replace the SeldonDeployment spec.
+The MLGraph spec will replace the SeldonDeployment CRD as an evolution for non KNative customers who want more customization.
 
 ## Examples
+
+Examples for existing SeldonDeployments and their converted MLGraph specs are shown below.
+
 
 ### Single Model
 

@@ -13,9 +13,11 @@ specification for defining:
   * [Data plane](data-plane.md)
 
 ## Implementations
- 
- There may be several implementations:
- 
-   * A synchronous implemtation provided by a graph orchestrator
-       * A [seldon implementation](seldon-impl.md)
-   * A [KNative implementation](knative-impl.md) for asynchronous cases 
+
+Possible implementations could be:
+
+   * A [KNative implementation](knative-impl.md) 
+   * A [Non Knative implementation](seldon-impl.md) as a transition from the current Seldon Core.
+
+These two implementations could be a single operator which handles both.
+
