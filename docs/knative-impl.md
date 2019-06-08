@@ -19,6 +19,11 @@ A KNative implementation is shown below:
 
 A Channel with a Subscription that applies meta data to the CloudEvent for each request that allows a subsequent Broker with Filters for each path to be used to direct requests. Headers would need to be added to the CloudEvent that will be matched by the Filters for each possible path to forward the request.
 
+Notes:
+
+ * A component should provide to the router server then possible active paths that can be chosen
+ * As described the rouring server can be stateless
+
  
 ## Merge
  
@@ -26,7 +31,10 @@ We need a component that will allow events that have passed through the previous
 
 ![knative-merge](./knative-merge.png)
 
-The challenge is for any such component to know when all events for a single request have reached it so that it can do its merge processing and emit a final event.
+Notes:
+
+  * The challenge is for any such component to know when all events for a single request have reached it so that it can do its merge processing and emit a final event. This means the merge server needs to be stateful as multiple requests may need to arrive to the server before it can emit a merged result. Can KNative provide "sticky" routing to Subcription servers to handle this?
+  
 
 
 ## Questions
