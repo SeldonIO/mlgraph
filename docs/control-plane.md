@@ -31,7 +31,7 @@ The Spec section of the resource definition encapsulates the desired state of th
 | Field       | Value       | Description |
 | ----------- | ----------- | ----------- |
 | custom | List<[CustomSpec](#CustomSpec)> | A list of custom specs for implementing the nodes. |
-| dag               | [DAGSpec](#DAGSpec) | The default traffic route serving a ModelSpec. |
+| dag               | [DAGSpec](#DAGSpec) | Directed Acyclic Graph definition |
 
 ### Status
 
