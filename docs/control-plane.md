@@ -59,12 +59,21 @@ Only one field must be defined.
 | Field       | Value       | Description |
 | ----------- | ----------- | ----------- |
 | name | string | The name of the container in the custom spec that implements this node |
-| kfservice | string   | The name of a kubeflow kf service |
+| kfservice | [KFService](#KFService)    | KFService definition |
+| custom | [CustomSpec](#CustomSpec) | Custom implementation spec |
 | svc | string | The FQDN name of a kubernetes service |
 
 Notes:
 
   * Do we need to specify `modelName` for kfservice?
+
+
+### KFService
+
+| Field       | Value       | Description |
+| ----------- | ----------- | ----------- |
+| spec | [KFServiceSpec](https://github.com/kubeflow/kfserving/blob/master/docs/control-plane.md#spec) | KFServiceSpec |
+| ref | String | Name of existing KFService |
 
 ### CustomSpec
 
@@ -145,15 +154,27 @@ spec:
     - name: b
       dependencies: [a]
       implementation:
-        kfservice: kfb
+        kfservice:
+          spec:
+            default:
+              sklearn:
+                modelUri: "gs://kfserving-samples/models/sklearn/iris/"
     - name: c
       dependencies: [a]
       implementation:
-        kfservice: kfc
+        kfservice:
+          spec:
+            default:
+              xgboost:
+                modelUri: "gs://kfserving-samples/models/xgboost/iris/"
     - name: d
       dependencies: [a]
       implementation:
-        kfservice: kfd
+        kfservice:
+          spec:
+            default:
+              tensorflow:
+                modelUri: "gs://kfserving-samples/models/tensorflow/iris/"
 ```
 
 ### E-Greedy Multi_Armed Bandit over 3 KFServices
@@ -162,7 +183,7 @@ spec:
 apiVersion: serving.mlspec.org/v1alpha2
 kind: MLGraph
 metadata:
-  name: egreedy
+  name: experiment
 spec:
   dag:
     - name: a
@@ -172,15 +193,27 @@ spec:
     - name: b
       dependencies: [a]
       implementation:
-        kfservice: kfb
+        kfservice:
+          spec:
+            default:
+              sklearn:
+                modelUri: "gs://kfserving-samples/models/sklearn/iris/"
     - name: c
       dependencies: [a]
       implementation:
-        kfservice: kfc
+        kfservice:
+          spec:
+            default:
+              xgboost:
+                modelUri: "gs://kfserving-samples/models/xgboost/iris/"
     - name: d
       dependencies: [a]
       implementation:
-        kfservice: kfd
+        kfservice:
+          spec:
+            default:
+              tensorflow:
+                modelUri: "gs://kfserving-samples/models/tensorflow/iris/"
 ```
 
 ### Simple Ensembler for 3 KFServices
@@ -194,13 +227,25 @@ spec:
   dag:
     - name: a
       implementation:
-        kfservice: kfa
+        kfservice:
+          spec:
+            default:
+              sklearn:
+                modelUri: "gs://kfserving-samples/models/sklearn/iris/"          
     - name: b
       implementation:
-        kfservice: kfb
+        kfservice:
+          spec:
+            default:
+              xgboost:
+                modelUri: "gs://kfserving-samples/models/xgboost/iris/"
     - name: c
       implementation:
-        kfservice: kfc
+        kfservice:
+          spec:
+            default:
+              tensorflow:
+                modelUri: "gs://kfserving-samples/models/tensorflow/iris/"
     - name: d
       dependencies: [a, b, c]
       merge:
