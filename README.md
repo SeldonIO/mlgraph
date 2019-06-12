@@ -47,7 +47,6 @@ spec:
         custom:
           podSpec:
             containers:
-              - name: classifier
                 image: myorg/transformer:0.1
 
     - name: modelC
@@ -62,7 +61,6 @@ spec:
       dependencies: [modelA, modelB, modelC]
       merge:
         ensemble:
-
 ```
 
 ## Definitions
