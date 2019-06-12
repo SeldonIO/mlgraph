@@ -1,42 +1,30 @@
 # Data Plane for ML Graph
 
-ML Graph adds two specific operations: Route and Merge. Users can provide custom implementations for these.
+ML Graph adds two specific operations: Route and Join. Users can provide custom implementations for these.
 
-# Path Spec and Payloads
+An example graph:
 
-There will need to be path to make prediction and in future calls such as Feedback needed for reinforcement learning.
+![example-graph](./example-graph.png)
 
-## API Path Specs
+One request flow through this could:
 
-For [Tensorflow Http](https://www.tensorflow.org/tfx/serving/api_rest) the `predict` API is of the form:
+![example-graph-request-flow1](./example-graph-request1.png)
 
-```
-POST http://host:port/v1/models/${MODEL_NAME}[/versions/${MODEL_VERSION}]:predict
-```
+Another request could take the following route:
 
-For Seldon the predict API is of the form:
+![example-graph-request-flow2](./example-graph-request2.png)
 
-```
-/api/v0.1/predictions
-```
 
-For a graph the need to specify a particular model does not make sense as a graph may contain many models therefore a path spec more like that of Seldon would seem to make sense.
 
-## Payloads
-
-Payloads could be either Tensorflow or Seldon as long as all nodes in the graph conform to this.
-
-# Route
+# Route Contract
 
 A user should provide a server that:
 
- * Accepts calls for their protocol,e.g., Tensorflow serving, or Seldon
- * The requests will contain a header `mlgraph/routable-nodes` with the names of valid nodes that this request can be routed to.
- * Returns a response with Header `mlgraph/route` with value the list of child node names the request should be routed to.
+ * Requests will contain a header `mlgraph/routable-nodes` with the names of valid nodes that this request can be routed to.
+ * Returns a response with possibly modified payload with Header `mlgraph/route` with value the list of child node names the request should be routed to.
 
 
-
-# Merge
+# Join Contract
 
 A user should provide a server that:
 
@@ -44,4 +32,21 @@ A user should provide a server that:
  * Upon receving the request if the merge should not be carried out then an empty reply should be returned.
  * Each request will contain a header `mlgraph/pending-requests` which will provide an upper bound on the number of requests that may still arrive for this transaction. It is an upper bound as other requests in this transaction may not have passed through all routing elements in the graph so it is uncertain if all routes to this node will actually be taken.
 
+
+# Request Management
+
+The MLGraph data plane will need to add components to add required headers for routing and joining, in particular:
+
+  * `mlgraph/routable-nodes` : added to allow custom routing to know which child nodes can be routed to
+  * `mlgraph/pending-requests` : added to allow custom joiner to know it can carry out join on all payloads
+     * After a routing operation routes NOT taken would decrease pending request paths to future join operations
+
+## KNative impplementation
+
+Options:
+
+ * Add sidecars to routing and join nodes to pre/postprocess the request/responses.
+ * Add separate KNative services to pre/postprocess request/responses
+
+Either method will need to add headers to the request to allow future components to catculate the `mlgraph/pending-requests` value for each node.
 

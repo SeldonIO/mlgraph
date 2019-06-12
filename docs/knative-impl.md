@@ -5,9 +5,9 @@ The is a work-in-progress proposal of how a KNative implementation could be crea
 There are two core operations that need to be applied:
 
   * Route: Route request to 1 or more subsequent nodes in the graph
-  * Merge: Merge a set of responses from dependent nodes in the graph
+  * Join: Join a set of responses from dependent nodes in the graph
 
-Messages will be passed through the graph and be split and merged as defined by the specification.
+Messages will be passed through the graph and be split and joined as defined by the specification.
 
 ## Route
 
@@ -21,26 +21,19 @@ A Channel with a Subscription that applies meta data to the CloudEvent for each 
 
 Notes:
 
- * A component should provide to the router server then possible active paths that can be chosen
- * As described the rouring server can be stateless
-
+ * An MLGraph component should provide to the router server the possible active paths that can be chosen
  
-## Merge
+## Join
  
-We need a component that will allow events that have passed through the previous graph nodes to be joined together for one external request. When a request is managed by the graph it will be given a unique ID. The role of the merge component will be to join together events that have the same ID into a single event. A rough design is shown below:
+We need a component that will allow events that have passed through the previous graph nodes to be joined together. When a request is managed by the graph it will be given a unique ID. The role of the join component will be to join together events that have the same ID into a single event. A rough design is shown below:
 
-![knative-merge](./knative-merge.png)
+![knative-join](./knative-join.png)
 
 Notes:
 
-  * The challenge is for any such component to know when all events for a single request have reached it so that it can do its merge processing and emit a final event. This means the merge server needs to be stateful as multiple requests may need to arrive to the server before it can emit a merged result. Can KNative provide "sticky" routing to Subcription servers to handle this?
-  
+ * An MLGraph component should provide to the join server whether the current event is the last for this request. This will allow the joiner server to produce a final joined result.
 
 
-## Questions
-
- * Does KNative have the resilience to handle retries for lost messages?
- 
  
  
  

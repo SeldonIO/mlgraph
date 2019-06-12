@@ -1,0 +1,46 @@
+apiVersion: serving.mlspec.org/v1alpha2
+kind: MLGraph
+metadata:
+  name: ensemble
+spec:
+  dag:
+    - name: route
+      route:
+        mab:
+          egreedy: 0.1    
+    - name: modelA
+      dependencies: [route]
+      implementation:
+        kfservice:
+          spec:
+            default:
+              sklearn:
+                modelUri: "gs://kfserving-samples/models/sklearn/iris/"          
+    - name: modelB
+      dependencies: [route]      
+      implementation:
+        kfservice:
+          spec:
+            default:
+              xgboost:
+                modelUri: "gs://kfserving-samples/models/xgboost/iris/"
+    - name: transform
+      dependencies: [route]
+      implementation:
+        custom:
+          podSpec:
+            containers:
+                image: myorg/transformer:0.1
+
+    - name: modelC
+      dependencies: [transform]
+      implementation:
+        kfservice:
+          spec:
+            default:
+              tensorflow:
+                modelUri: "gs://kfserving-samples/models/tensorflow/iris/"
+    - name: join
+      dependencies: [modelA, modelB, modelC]
+      merge:
+        ensemble:
