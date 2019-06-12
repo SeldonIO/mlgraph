@@ -12,7 +12,7 @@ An example graph:
 
 ![example-graph](./docs/example-graph.png)
 
-An example specification for the above graph:
+An example specification for the above graph that requests an epsilon-greedy multi-armed bandit for the routing and a default ensembler for the join is shown below. Models are provided with KFServing specs and the transform step with a custom component.
 
 ```YAML
 apiVersion: serving.mlspec.org/v1alpha2
