@@ -21,8 +21,9 @@ The Spec section of the resource definition encapsulates the desired state of th
 
 | Field       | Value       | Description |
 | ----------- | ----------- | ----------- |
-| inline | List<[InlineSpec](#InlineSpec)> | A list of inline specs for implementing the nodes. |
+| inline | List<[InlineSpec](#InlineSpec)> | A list of inline specs for implementing the nodes. (optional) |
 | dag               | [DAGSpec](#DAGSpec) | Directed Acyclic Graph definition |
+| analysis | [AnalysisSpec](#AnalysisSpec) | Configure analysis (optional) |
 
 ### Status
 
@@ -112,6 +113,47 @@ If no fields specified then merge requests and average
 | ----------- | ----------- | ----------- |
 | weights  | Map<String,Float> |  Weight to apply to each traffic from each dependencies when merging |
 
+
+### AnalysisSpec
+
+| Field       | Value       | Description |
+| ----------- | ----------- | ----------- |
+| explanation | [ExplanationSpec](#ExplanationSpec) | model explanations |
+| outliers | [OutlierSpec](#OutlierSpec) | request outlier monitoring |
+| skew | [SkewSpec](#SkewSpec) | Concept drift/skew monitoring ] |
+
+### ExplanationSpec
+
+| Field       | Value       | Description |
+| ----------- | ----------- | ----------- |
+| method | string | Explanation method auto or method name |
+| activation | float | What percetage of prediction calls will get explanations (default 0%) |
+| reporting | [ReportingSpec](#ReportingSpec) | How to report results |
+
+### OutlierSpec
+
+| Field       | Value       | Description |
+| ----------- | ----------- | ----------- |
+| method | string | Outlier method auto or method name |
+| activation | float | What percetage of prediction calls will get outlier detection (default 100%) |
+| reporting | [ReportingSpec](#ReportingSpec) | How to report results |
+
+### SkewSpec
+
+| Field       | Value       | Description |
+| ----------- | ----------- | ----------- |
+| method | string | Skew method auto or method name |
+| activation | float | What percetage of reward calls will update skew component (default 100%) |
+| reporting | [ReportingSpec](#ReportingSpec) | How to report results |
+
+
+
+
+## ReportingSpec
+
+| Field       | Value       | Description |
+| ----------- | ----------- | ----------- |
+| ref  | *corev1.ObjectReference    | Reference to an object that will be used to send result. Should be addressable in KNative sense. | 
 
 ## Execution
 
