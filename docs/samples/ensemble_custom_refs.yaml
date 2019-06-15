@@ -1,0 +1,32 @@
+apiVersion: serving.mlspec.org/v1alpha2
+kind: MLGraph
+metadata:
+  name: ensemble
+  namespace: test
+spec:
+  dag:
+    - name: a
+      implementation:
+        ref:
+          custom:
+            apiVersion: serving.kubeflow.org/v1alpha1
+            kind: KFService
+            name: xgboostServer
+    - name: b
+      implementation:
+        ref:
+          custom:
+            apiVersion: serving.ml.org/v1alpha1
+            kind: MLServer
+            name: sklearnServer
+    - name: c
+      implementation:
+        ref:
+          custom:
+            apiVersion: serving.company.com/v1alpha1
+            kind: MLCustomServer
+            name: customServer
+    - name: d
+      dependencies: [a, b, c]
+      merge:
+        ensemble:

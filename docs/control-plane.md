@@ -10,27 +10,18 @@ This top level resource definition is shared by all Kubernetes Custom Resources.
 | Field       |  Value      | Description |
 | ----------- | ----------- | ----------- |
 | kind       | MLGraph                     | [Read the Docs](https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#types-kinds) |
-| apiVersion | serving.mlpsepc.org/v1alpha1 | [Read the Docs](https://kubernetes.io/docs/reference/using-api/api-overview/#api-versioning) |
-| metadata   | [Metadata](#Metadata)         | [Read the Docs](https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#metadata) |
+| apiVersion | mlgraph.org/v1alpha1 | [Read the Docs](https://kubernetes.io/docs/reference/using-api/api-overview/#api-versioning) |
+| metadata   | Metadata         | [Read the Docs](https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#metadata) |
 | spec       | [Spec](#Spec)                 | [Read the Docs](https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#spec-and-status) |
 | status     | [Status](#Status)             | [Read the Docs](https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#spec-and-status) |
 
-### Metadata
-The Metadata section of the resource definition contains resource identification fields and specialized flags. Name and namespace are immutable and if changed, will result in the creation of a new resource alongside the old one. Label and annotations are mutable. Labels and annotations will be applied to all relevant subresources of the Service enabling users to apply the same grouping at the pod level and pass though any necessary annotations.
-
-| Field       | Value       | Description |
-| ----------- | ----------- | ----------- |
-| name        | String              | A name for your KFService. This will ultimately derive the internal and external URIs. |
-| namespace   | String              | A namespace for your Service. This will ultimately derive the internal and external URIs. If missing, defaults to the namespace "default". |
-| labels      | Map<String, String> | A set of key value pairs denoting arbitrary information (e.g integrate with MLOps Lifecycle systems or organize many Models). |
-| annotations | Map<String, String> | A set of key value pairs used to enable specific features available in different kubernetes environments (e.g., Google Cloud ML Engine vs AzureML). |
 
 ### Spec
 The Spec section of the resource definition encapsulates the desired state of the user's model serving resources. Changes made to the spec will be enacted upon the underlying servers in an eventually consistent manner. This infrastructure-as-code paradigm enables the coveted GitOps design pattern, where configurations are checked into git and may be reverted and applied to restore previous configurations. All fields are mutable and may be applied idempotently.
 
 | Field       | Value       | Description |
 | ----------- | ----------- | ----------- |
-| custom | List<[CustomSpec](#CustomSpec)> | A list of custom specs for implementing the nodes. |
+| inline | List<[InlineSpec](#InlineSpec)> | A list of inline specs for implementing the nodes. |
 | dag               | [DAGSpec](#DAGSpec) | Directed Acyclic Graph definition |
 
 ### Status
@@ -58,28 +49,26 @@ Only one field must be defined.
 
 | Field       | Value       | Description |
 | ----------- | ----------- | ----------- |
-| name | string | The name of the container in the custom spec that implements this node |
-| kfservice | [KFService](#KFService)    | KFService definition |
-| custom | [CustomSpec](#CustomSpec) | Custom implementation spec |
-| svc | string | The FQDN name of a kubernetes service |
-
-Notes:
-
-  * Do we need to specify `modelName` for kfservice?
+| name | *string | The name of the container in the inline spec that implements this node |
+| ref | *[Reference](#ReferenceSpec)    | Reference to existing kubernetes resource |
+| inline | *[InlineSpec](#InlineSpec) | inline implementation spec |
 
 
-### KFService
+### ReferenceSpec
 
 | Field       | Value       | Description |
 | ----------- | ----------- | ----------- |
-| spec | [KFServiceSpec](https://github.com/kubeflow/kfserving/blob/master/docs/control-plane.md#spec) | KFServiceSpec |
-| ref | String | Name of existing KFService |
+| kfservice | *string    | KFService name |
+| custom | *corev1.ObjectReference    | Reference to an object that will be used to find target endpoint. Object must adhere to KNative Addressable pattern. |
+| uri | *string | Reference to an endpoint |
 
-### CustomSpec
+
+### InlineSpec
 
 | Field       | Value       | Description |
 | ----------- | ----------- | ----------- |
-| spec | v1.PodSpec | A v1.PodSpec definiton |
+| kfspec | [KFServiceSpec](https://github.com/kubeflow/kfserving/blob/master/docs/control-plane.md#spec) | KFServiceSpec |
+| podspec | v1.PodSpec | A v1.PodSpec definiton |
 | replicas | *int | Number of replicas (optional) |
 
 ### RouteSpec
@@ -133,176 +122,4 @@ For each node:
   1. Apply merge if specified or pass traffic as received
   1. Run implementation if specified
   1. Apply route if specified or pass traffic to all children
-
-## Examples
-
-
-### 3-Way Experiment to KFServices
-
-Split traffic evenly between 3 models.
-
-```YAML
-apiVersion: serving.mlspec.org/v1alpha2
-kind: MLGraph
-metadata:
-  name: experiment
-spec:
-  dag:
-    - name: a
-      route:
-        split:
-    - name: b
-      dependencies: [a]
-      implementation:
-        kfservice:
-          spec:
-            default:
-              sklearn:
-                modelUri: "gs://kfserving-samples/models/sklearn/iris/"
-    - name: c
-      dependencies: [a]
-      implementation:
-        kfservice:
-          spec:
-            default:
-              xgboost:
-                modelUri: "gs://kfserving-samples/models/xgboost/iris/"
-    - name: d
-      dependencies: [a]
-      implementation:
-        kfservice:
-          spec:
-            default:
-              tensorflow:
-                modelUri: "gs://kfserving-samples/models/tensorflow/iris/"
-```
-
-### E-Greedy Multi_Armed Bandit over 3 KFServices
-
-```YAML
-apiVersion: serving.mlspec.org/v1alpha2
-kind: MLGraph
-metadata:
-  name: experiment
-spec:
-  dag:
-    - name: a
-      route:
-        mab:
-          egreedy: 0.1
-    - name: b
-      dependencies: [a]
-      implementation:
-        kfservice:
-          spec:
-            default:
-              sklearn:
-                modelUri: "gs://kfserving-samples/models/sklearn/iris/"
-    - name: c
-      dependencies: [a]
-      implementation:
-        kfservice:
-          spec:
-            default:
-              xgboost:
-                modelUri: "gs://kfserving-samples/models/xgboost/iris/"
-    - name: d
-      dependencies: [a]
-      implementation:
-        kfservice:
-          spec:
-            default:
-              tensorflow:
-                modelUri: "gs://kfserving-samples/models/tensorflow/iris/"
-```
-
-### Simple Ensembler for 3 KFServices
-
-```YAML
-apiVersion: serving.mlspec.org/v1alpha2
-kind: MLGraph
-metadata:
-  name: ensemble
-spec:
-  dag:
-    - name: a
-      implementation:
-        kfservice:
-          spec:
-            default:
-              sklearn:
-                modelUri: "gs://kfserving-samples/models/sklearn/iris/"          
-    - name: b
-      implementation:
-        kfservice:
-          spec:
-            default:
-              xgboost:
-                modelUri: "gs://kfserving-samples/models/xgboost/iris/"
-    - name: c
-      implementation:
-        kfservice:
-          spec:
-            default:
-              tensorflow:
-                modelUri: "gs://kfserving-samples/models/tensorflow/iris/"
-    - name: d
-      dependencies: [a, b, c]
-      merge:
-        ensemble:
-```
-
-### Single model with custom implementation
-
-```YAML
-apiVersion: serving.mlspec.org/v1alpha2
-kind: MLGraph
-metadata:
-  name: test-deployment
-spec:
-  custom:
-    - spec:
-        containers:
-          - name: classifier
-            image: seldonio/mock_classifier:0.1
-      replicas: 1              
-  dag:
-      name: classifier
-```
-
-### Complex Pipeline with custom implementation
-
-```YAML
-apiVersion: serving.mlspec.org/v1alpha2
-kind: MLGraph
-metadata:
-  name: test-deployment
-spec:
-  custom:
-    - spec:
-        containers:
-          - name: imagenet-itransformer
-            image: seldonio/openvino-demo-transformer:0.1
-          - name: imagenet-otransformer
-            image: seldonio/openvino-demo-transformer:0.1
-          - name: prediction1
-            image: seldonio/openvino-demo-prediction:0.2
-          - name: prediction2
-            image: seldonio/openvino-demo-prediction:0.2
-      replicas: 1              
-  dag:
-    - name: imagenet-itransformer
-    - name: prediction1
-      dependencies: [imagenet-itransformer]
-    - name: prediction2
-      dependencies: [imagenet-itransformer]
-    - name: imagenet-combiner
-      dependencies: [prediction1, prediction2]
-      merge:
-          ensemble:
-            implementation:
-              name: imagenet-combiner
-    - name: imagenet-otransformer
-      dependencies: [imagenet-combiner]        
-```
 

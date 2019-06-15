@@ -40,8 +40,8 @@ kind: MLGraph
 metadata:
   name: test-deployment
 spec:
-  custom:
-    - spec:
+  inline:
+    - podspec:
         containers:
 	  - name: classifier
             image: seldonio/mock_classifier:0.1
@@ -114,8 +114,8 @@ kind: MLGraph
 metadata:
   name: test-deployment
 spec:
-  custom:
-    - spec:
+  inline:
+    - podspec:
         containers:
           - name: imagenet-itransformer
             image: seldonio/openvino-demo-transformer:0.1

@@ -1,0 +1,20 @@
+apiVersion: serving.mlspec.org/v1alpha2
+kind: MLGraph
+metadata:
+  name: abtest
+  namespace: test
+spec:
+  dag:
+    - name: abtest
+      route:
+        split:
+    - name: a
+      dependencies: [abtest]
+      implementation:
+        ref:
+          kfservice: sklearnModel
+    - name: b
+      dependencies: [abtest]
+      implementation:
+        ref:
+          kfservice: xgboostModel

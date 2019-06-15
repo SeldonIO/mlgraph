@@ -29,7 +29,7 @@ A user should provide a server that:
 A user should provide a server that:
 
  * Receives requests and eventually returns an aggregated request.
- * Upon receving the request if the merge should not be carried out then an empty reply should be returned.
+ * Upon receiving the request if the merge should not be carried out then an empty reply should be returned.
  * Each request will contain a header `mlgraph/pending-requests` which will provide an upper bound on the number of requests that may still arrive for this transaction. It is an upper bound as other requests in this transaction may not have passed through all routing elements in the graph so it is uncertain if all routes to this node will actually be taken.
 
 
@@ -41,12 +41,12 @@ The MLGraph data plane will need to add components to add required headers for r
   * `mlgraph/pending-requests` : added to allow custom joiner to know it can carry out join on all payloads
      * After a routing operation routes NOT taken would decrease pending request paths to future join operations
 
-## KNative impplementation
+## KNative implementation
 
 Options:
 
  * Add sidecars to routing and join nodes to pre/postprocess the request/responses.
  * Add separate KNative services to pre/postprocess request/responses
 
-Either method will need to add headers to the request to allow future components to catculate the `mlgraph/pending-requests` value for each node.
+Either method will need to add headers to the request to allow future components to calculate the `mlgraph/pending-requests` value for each node.
 

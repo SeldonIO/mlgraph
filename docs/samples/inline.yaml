@@ -1,0 +1,32 @@
+apiVersion: serving.mlspec.org/v1alpha2
+kind: MLGraph
+metadata:
+  name: inline-example
+  namespace: test
+spec:
+  inline:
+    - podspec:
+        containers:
+          - name: imagenet-itransformer
+            image: seldonio/openvino-demo-transformer:0.1
+          - name: imagenet-otransformer
+            image: seldonio/openvino-demo-transformer:0.1
+          - name: prediction1
+            image: seldonio/openvino-demo-prediction:0.2
+          - name: prediction2
+            image: seldonio/openvino-demo-prediction:0.2
+      replicas: 1              
+  dag:
+    - name: imagenet-itransformer
+    - name: prediction1
+      dependencies: [imagenet-itransformer]
+    - name: prediction2
+      dependencies: [imagenet-itransformer]
+    - name: imagenet-combiner
+      dependencies: [prediction1, prediction2]
+      merge:
+          ensemble:
+            implementation:
+              name: imagenet-combiner
+    - name: imagenet-otransformer
+      dependencies: [imagenet-combiner]        

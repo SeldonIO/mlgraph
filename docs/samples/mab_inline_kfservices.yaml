@@ -1,33 +1,35 @@
 apiVersion: serving.mlspec.org/v1alpha2
 kind: MLGraph
 metadata:
-  name: experiment
+  name: mab_kf
+  namespace: test
 spec:
   dag:
     - name: a
       route:
-        split:
+        mab:
+          egreedy: 0.1
     - name: b
       dependencies: [a]
       implementation:
-        kfservice:
-          spec:
+        inline:
+          kfspec:
             default:
               sklearn:
                 modelUri: "gs://kfserving-samples/models/sklearn/iris/"
     - name: c
       dependencies: [a]
       implementation:
-        kfservice:
-          spec:
+        inline:
+          kfspec:
             default:
               xgboost:
                 modelUri: "gs://kfserving-samples/models/xgboost/iris/"
     - name: d
       dependencies: [a]
       implementation:
-        kfservice:
-          spec:
+        inline:
+          kfspec:
             default:
               tensorflow:
                 modelUri: "gs://kfserving-samples/models/tensorflow/iris/"
