@@ -1,11 +1,11 @@
 # Data Plane for ML Graph
 
- * [Request flow](#RequestFlow)
- * [Request Methods](#RequestMethods)
- * [Request Payloads](#RequestPayloads)
- * [Component Contracts](#ComponentContracts)
- * [Request Management](#RequestManagement)
- * [State Management](#StateManagement)
+ * [Request flow](#Request-Flow)
+ * [Request Methods](#Request-Methods)
+ * [Request Payloads](#Request-Payloads)
+ * [Component Contracts](#Component-Contracts)
+ * [Request Management](#Request-Management)
+ * [State Management](#State-Management)
 
 ## Request Flow
 
