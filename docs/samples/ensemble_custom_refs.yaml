@@ -26,7 +26,7 @@ spec:
             apiVersion: serving.company.com/v1alpha1
             kind: MLCustomServer
             name: customServer
-    - name: d
+    - name: ensemble
       dependencies: [a, b, c]
       merge:
         ensemble:

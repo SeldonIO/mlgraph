@@ -4,6 +4,8 @@
 
 An AB Test refering to existing KFServices in the same namespace.
 
+![abtest](./abtest.png)
+
 ```YAML
 apiVersion: serving.mlspec.org/v1alpha2
 kind: MLGraph
@@ -32,6 +34,8 @@ spec:
 
 ## Multi-Armed Bandit to Inline KFservices
 
+![mab](./mab.png)
+
 ```YAML
 apiVersion: serving.mlspec.org/v1alpha2
 kind: MLGraph
@@ -40,28 +44,28 @@ metadata:
   namespace: test
 spec:
   dag:
-    - name: a
+    - name: mab
       route:
         mab:
           egreedy: 0.1
-    - name: b
-      dependencies: [a]
+    - name: a
+      dependencies: [mab]
       implementation:
         inline:
           kfspec:
             default:
               sklearn:
                 modelUri: "gs://kfserving-samples/models/sklearn/iris/"
-    - name: c
-      dependencies: [a]
+    - name: b
+      dependencies: [mab]
       implementation:
         inline:
           kfspec:
             default:
               xgboost:
                 modelUri: "gs://kfserving-samples/models/xgboost/iris/"
-    - name: d
-      dependencies: [a]
+    - name: c
+      dependencies: [mab]
       implementation:
         inline:
           kfspec:
@@ -76,6 +80,8 @@ spec:
 ## Ensemble from Custom References
 
 An ensemble using running kubernetes resources.
+
+![ensemble](./ensemble.png)
 
 ```YAML
 apiVersion: serving.mlspec.org/v1alpha2
@@ -106,7 +112,7 @@ spec:
             apiVersion: serving.company.com/v1alpha1
             kind: MLCustomServer
             name: customServer
-    - name: d
+    - name: ensemble
       dependencies: [a, b, c]
       merge:
         ensemble:
