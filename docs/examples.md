@@ -201,6 +201,8 @@ spec:
             image: seldonio/openvino-demo-prediction:0.2
           - name: prediction2
             image: seldonio/openvino-demo-prediction:0.2
+          - name: imagenet-combiner
+            image: seldonio/openvino-demo-combiner:0.1
       replicas: 1              
   dag:
     - name: imagenet-itransformer
