@@ -112,7 +112,8 @@ The above would be converted to:
 apiVersion: serving.mlspec.org/v1alpha2
 kind: MLGraph
 metadata:
-  name: test-deployment
+  name: inline-example
+  namespace: test
 spec:
   inline:
     - podspec:
@@ -125,6 +126,8 @@ spec:
             image: seldonio/openvino-demo-prediction:0.2
           - name: prediction2
             image: seldonio/openvino-demo-prediction:0.2
+          - name: imagenet-combiner
+            image: seldonio/openvino-demo-combiner:0.1
       replicas: 1              
   dag:
     - name: imagenet-itransformer

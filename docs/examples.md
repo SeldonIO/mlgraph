@@ -181,6 +181,8 @@ spec:
 
 ## Inline example
 
+![inline](inline.png)
+
 ```YAML
 apiVersion: serving.mlspec.org/v1alpha2
 kind: MLGraph
