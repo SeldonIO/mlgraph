@@ -32,6 +32,10 @@ Another prediction request could take the following route:
     * Example `http://endpoint/reward`
  * **Explain** : Explain a particular request
     * Example `http://endpoint/explain`
+ * **Outlier** : Check for Outlier 
+    * Example `http://endpoint/outlier`
+ * **Skew** : Check for Skew/Concept Drift
+    * Example `http://endpoint/skew`
 
 ## Request Payloads
 
@@ -63,7 +67,20 @@ Send a reward of 1 for a previous prediction with prediction UID `1234`:
 ### Explain
 
  * Request: Tensorflow or Seldon request payloads until we unify on a single MLGraph payload.
- * Response: Explanation method specific response payload.
+ * Response: Explanation method specific response payload: TBD
+
+### Outlier
+
+ * Request: Tensorflow or Seldon request payloads until we unify on a single MLGraph payload.
+ * Response: Outlier response: TBD
+
+### Skew
+
+ * Request: empty request
+ * Response: Current skew: TBD
+
+
+
 
 ## Component Contracts
 
@@ -97,6 +114,30 @@ For **reward** calls:
 ### Model Contract
 
 Current protocols such as Seldon's have the same payload for request and responses so components can always we connected into a graph. For other protocols such as Tensorflow's the prediction request payload differs from the prediction response and therefore the ability of nodes in a graph being able to be connected would need verification.
+
+### Explanation Contract
+
+For **predict calls**
+
+  * Receive a predict request and generate explanation response to reporting endpoint
+
+For **explain calls**
+
+  * Receive a predict payload and generate a synchronous response
+
+### Outlier Contract
+
+For **Predict calls**
+
+ * Receive a predict request and generate outlier response to reporting endpoint
+
+For **Outlier calls**
+
+ * Receive a predict payload and generate an outlier synchronous response
+
+### Skew Contract
+
+TBD
 
 
 ## Request Management

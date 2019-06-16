@@ -1,0 +1,43 @@
+apiVersion: serving.mlspec.org/v1alpha2
+kind: MLGraph
+metadata:
+  name: ensemble
+  namespace: test
+spec:
+  dag:
+    - name: a
+      implementation:
+        ref:
+          kfservice: sklearnModel
+    - name: b
+      implementation:
+        ref:
+          kfservice: xgboostModel
+    - name: ensemble
+      dependencies: [a, b]
+      merge:
+        ensemble:
+  analysis:
+    explanation:
+      method: anchors-tabular
+      activation: 0
+      reporting:
+        ref:
+          apiVersion: eventing.knative.dev/v1alpha1
+          kind: Channel
+          name: explanations
+    outliers:
+      activation: 100
+      reporting:
+        ref:
+          apiVersion: eventing.knative.dev/v1alpha1
+          kind: Channel
+          name: outlier-alerts
+    skew:
+      activation: 10
+      reporting:
+        ref:
+          apiVersion: eventing.knative.dev/v1alpha1
+          kind: Channel
+          name: skew-alerts
+      
