@@ -9,7 +9,7 @@ spec:
       route:
         mab:
           egreedy: 0.1
-    - name: b
+    - name: a
       dependencies: [mab]
       implementation:
         inline:
@@ -17,7 +17,7 @@ spec:
             default:
               sklearn:
                 modelUri: "gs://kfserving-samples/models/sklearn/iris/"
-    - name: c
+    - name: b
       dependencies: [mab]
       implementation:
         inline:
@@ -25,11 +25,3 @@ spec:
             default:
               xgboost:
                 modelUri: "gs://kfserving-samples/models/xgboost/iris/"
-    - name: d
-      dependencies: [mab]
-      implementation:
-        inline:
-          kfspec:
-            default:
-              tensorflow:
-                modelUri: "gs://kfserving-samples/models/tensorflow/iris/"

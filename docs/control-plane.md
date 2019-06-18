@@ -121,14 +121,17 @@ If no fields specified then merge requests and average
 | explanation | [ExplanationSpec](#ExplanationSpec) | model explanations |
 | outliers | [OutlierSpec](#OutlierSpec) | request outlier monitoring |
 | skew | [SkewSpec](#SkewSpec) | Concept drift/skew monitoring ] |
+| bias | [BiasSpec](#BiasSpec) | Bias monitoring ] |
+| reporting | [ReportingSpec](#ReportingSpec) | How to report results |
 
 ### ExplanationSpec
 
 | Field       | Value       | Description |
 | ----------- | ----------- | ----------- |
 | method | string | Explanation method auto or method name |
+
 | activation | float | What percetage of prediction calls will get explanations (default 0%) |
-| reporting | [ReportingSpec](#ReportingSpec) | How to report results |
+| reporting | [ReportingSpec](#ReportingSpec) | Where to send explanation results |
 
 ### OutlierSpec
 
@@ -136,7 +139,7 @@ If no fields specified then merge requests and average
 | ----------- | ----------- | ----------- |
 | method | string | Outlier method auto or method name |
 | activation | float | What percetage of prediction calls will get outlier detection (default 100%) |
-| reporting | [ReportingSpec](#ReportingSpec) | How to report results |
+| reporting | [ReportingSpec](#ReportingSpec) | Where to sent outlier alerts |
 
 ### SkewSpec
 
@@ -144,7 +147,15 @@ If no fields specified then merge requests and average
 | ----------- | ----------- | ----------- |
 | method | string | Skew method auto or method name |
 | activation | float | What percetage of reward calls will update skew component (default 100%) |
-| reporting | [ReportingSpec](#ReportingSpec) | How to report results |
+| reporting | [ReportingSpec](#ReportingSpec) | Where to send skew alerts |
+
+### BiasSpec
+
+| Field       | Value       | Description |
+| ----------- | ----------- | ----------- |
+| method | string | bias method auto or method name (defaults auto) |
+| activation | float | What percetage of prediction calls will update bias component (default 100%) |
+| reporting | [ReportingSpec](#ReportingSpec) | Where to send bias alerts |
 
 
 

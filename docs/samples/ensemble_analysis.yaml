@@ -17,27 +17,14 @@ spec:
       dependencies: [a, b]
       merge:
         ensemble:
-  analysis:
+  analysis:    
     explanation:
-      method: anchors-tabular
-      activation: 0
-      reporting:
-        ref:
-          apiVersion: eventing.knative.dev/v1alpha1
-          kind: Channel
-          name: explanations
     outliers:
-      activation: 100
-      reporting:
-        ref:
-          apiVersion: eventing.knative.dev/v1alpha1
-          kind: Channel
-          name: outlier-alerts
     skew:
-      activation: 10
-      reporting:
-        ref:
-          apiVersion: eventing.knative.dev/v1alpha1
-          kind: Channel
-          name: skew-alerts
+    bias:
+    reporting:
+      ref:
+        apiVersion: eventing.knative.dev/v1alpha1
+        kind: Channel
+        name: mlgraph_alerts
       

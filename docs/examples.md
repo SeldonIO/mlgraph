@@ -64,15 +64,6 @@ spec:
             default:
               xgboost:
                 modelUri: "gs://kfserving-samples/models/xgboost/iris/"
-    - name: c
-      dependencies: [mab]
-      implementation:
-        inline:
-          kfspec:
-            default:
-              tensorflow:
-                modelUri: "gs://kfserving-samples/models/tensorflow/iris/"
-
 ```
 
 [ref](./samples/mab_inline_kfservices.yaml)
@@ -105,18 +96,10 @@ spec:
             apiVersion: serving.ml.org/v1alpha1
             kind: MLServer
             name: sklearnServer
-    - name: c
-      implementation:
-        ref:
-          custom:
-            apiVersion: serving.company.com/v1alpha1
-            kind: MLCustomServer
-            name: customServer
     - name: ensemble
-      dependencies: [a, b, c]
+      dependencies: [a, b]
       merge:
         ensemble:
-
 ```
 
 [ref](./samples/ensemble_custom_refs.yaml)
@@ -249,29 +232,15 @@ spec:
       dependencies: [a, b]
       merge:
         ensemble:
-  analysis:
+  analysis:    
     explanation:
-      method: anchors-tabular
-      activation: 0
-      reporting:
-        ref:
-          apiVersion: eventing.knative.dev/v1alpha1
-          kind: Channel
-          name: explanations
     outliers:
-      activation: 100
-      reporting:
-        ref:
-          apiVersion: eventing.knative.dev/v1alpha1
-          kind: Channel
-          name: outlier-alerts
     skew:
-      activation: 10
-      reporting:
-        ref:
-          apiVersion: eventing.knative.dev/v1alpha1
-          kind: Channel
-          name: skew-alerts
+    bias:
+    reporting:
+      ref:
+        apiVersion: eventing.knative.dev/v1alpha1
+        kind: Channel
+        name: mlgraph_alerts
       
-
 ```
