@@ -23,6 +23,16 @@ Another prediction request could take the following route:
 
 ![example-graph-request-flow2](./example-graph-request2.png)
 
+For each node in the graph the request flow (and possible knative integration) is shown below:
+
+![Node request flow](./node-request-flow.png)
+
+Each node will define at least 1 of:
+
+  * Join : ensemble requests
+  * Predict/Transform : call prediction server or transformation service
+  * Route : route to some subset of connected nodes
+
 
 ## Request Methods
 
@@ -36,6 +46,8 @@ Another prediction request could take the following route:
     * Example `http://endpoint/outlier`
  * **Skew** : Check for Skew/Concept Drift
     * Example `http://endpoint/skew`
+ * **Boas** : Check for bias
+    * Example `http://endpoint/bias`
 
 ## Request Payloads
 
@@ -77,7 +89,12 @@ Send a reward of 1 for a previous prediction with prediction UID `1234`:
 ### Skew
 
  * Request: empty request
- * Response: Current skew: TBD
+ * Response: Current skew estinate: TBD
+
+### Bias
+
+ * Request: empty request
+ * Response: Current bias estimate: TBD
 
 
 
@@ -174,3 +191,5 @@ The calls that might be needed by components are:
  * Get state for my node
  * Push my state to reconcile with global state for my node (and return new reconciled global state)
 
+
+![State management](./state-management.png)
