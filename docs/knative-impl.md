@@ -2,12 +2,21 @@
 
 The is a work-in-progress proposal of how a KNative implementation could be created for MLGraph.
 
-There are two core operations that need to be applied:
+There are thre core operations that need to be applied:
 
+  * pipeline: join nodes together in a sequence in the graph
   * Route: Route request to 1 or more subsequent nodes in the graph
   * Join: Join a set of responses from dependent nodes in the graph
 
-Messages will be passed through the graph and be split and joined as defined by the specification.
+Messages will be passed through the graph and be sequenced, split and joined as defined by the specification.
+
+## Pipeline
+
+A KNative implementation for sequencing together a set of nodes (e.g. kfservices) is shown below:
+
+![knative-pipeline](./knative-pipeline.png)
+
+We could also use the existing knative [CRD for sequnces](https://github.com/knative/eventing/blob/master/pkg/apis/messaging/v1alpha1/sequence_types.go).
 
 ## Route
 
