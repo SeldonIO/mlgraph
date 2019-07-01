@@ -107,7 +107,7 @@ A user should provide a server that:
 
 For **predict** calls:
 
- * Requests will contain a header `mlgraph/routable-nodes` with the names of valid nodes that this request can be routed to.
+ * Finds the child nodes from a provided environment variable `MLGRAPH_CHILDREN``
  * Returns a response with possibly modified payload with Header `mlgraph/route` with value the list of child node names the request should be routed to.
 
 For **reward** calls:
@@ -191,5 +191,14 @@ The calls that might be needed by components are:
  * Get state for my node
  * Push my state to reconcile with global state for my node (and return new reconciled global state)
 
+One option is to provide a surrounding management layer to handle state for the nodes:
 
 ![State management](./state-management.png)
+
+A simpler option would be to provide a default state service, such as Redis and provide the details for users to connect to it via environment variables. They then have the responsibility to manage their own state.
+
+Stateful serverless has been discussed recently:
+
+   * [Akka proposal](https://github.com/lightbend/stateful-serverless)
+     * See [here](https://github.com/lightbend/stateful-serverless/blob/master/RATIONALE.md#event-sourcing-and-crdts-instead-of-crud) of critique of using simpler CRUD.
+

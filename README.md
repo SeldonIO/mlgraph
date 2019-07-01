@@ -3,9 +3,15 @@
 MLGraph defines a graph of machine learning components. The goal is to provide a simple machine learning focused 
 specification for defining:
 
-  * A/B Tests and multi-model experimentation
-  * Advanced optimization with Multi-Armed Bandits
-  * Model Ensembles
+  * Easy model Experimentation and AB tests
+  * Advanced routing with Multi-Armed Bandits
+  * Ensembling of models
+  * Explanations, Outlier Detection, Skew and Bias detection
+  * Builds upon KFServing and other ML Serving Components
+  * Flexible graph nodes:
+      * References or inline specs
+  * Custom user provided components
+  *Auto-validation of graph
 
 
 An example graph:
@@ -21,8 +27,14 @@ An example graph:
 
 ## Implementations
 
+There could be multiple implementations of the spec. The initial focus will be build upon KNative.
+
    * A [KNative implementation proposal](docs/knative-impl.md) 
 
+
+## Stack
+
+![stack](docs/stack.png)
 
 ## Discussion
 
