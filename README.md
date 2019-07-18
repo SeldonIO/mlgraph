@@ -29,7 +29,8 @@ An example graph:
 
 There could be multiple implementations of the spec. The initial focus will be build upon KNative.
 
-   * A [KNative implementation proposal](docs/knative-impl.md) 
+   * A [KNative implementation proposal](docs/knative-impl.md)
+   * An [Apache Arrow proposal](docs/arrow-impl.md)
 
 
 ## Stack
